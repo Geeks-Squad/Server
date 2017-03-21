@@ -1,0 +1,2 @@
+# Server
+The hackathon server.
