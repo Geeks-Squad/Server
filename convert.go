@@ -10,14 +10,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func makeStructJSON(queryText string, w http.ResponseWriter) error {
+func makeStructJSON(rows sql.Rows, w http.ResponseWriter) error {
 
-	db, err := sql.Open("mysql", "root:spd@/ddugky")
-
-	rows, err := db.Query(queryText)
-	if err != nil {
-		return err
-	}
 	columns, err := rows.Columns()
 	if err != nil {
 		return err

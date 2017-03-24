@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,23 +12,31 @@ import (
 func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/login", Login)
-	router.HandleFunc("/todos", TodoIndex)
-	router.HandleFunc("/todos/{todoId}", TodoShow)
 
+	authLogin := BasicAuth{http.HandlerFunc(Login)}
+	authCitizenID := BasicAuth{http.HandlerFunc(TodoIndex)}
+
+	s := router.PathPrefix("/Citizen").Subrouter()
+	s.Handle("/", authLogin)
+	s.Handle("/Name/{Name}", authCitizenID)
+	router.HandleFunc("/Signup", SignUpHandler)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 
+	signup := SignupBody{}
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(signup)
+	Signup(signup)
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Authorized")
+	w.Header().Add("Status-Code", "300")
 }
 
 func TodoIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Todo Index!")
-}
-
-func TodoShow(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	todoId := vars["todoId"]
-	fmt.Fprintln(w, "Todo show:", todoId)
 }

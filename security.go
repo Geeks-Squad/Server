@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"encoding/base64"
@@ -9,6 +9,10 @@ import (
 // BasicAuth Middleware with next handler in chain
 type BasicAuth struct {
 	Next http.Handler
+}
+
+func newBasicAuth(handler http.Handler) *BasicAuth {
+	return &BasicAuth{handler}
 }
 
 func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
