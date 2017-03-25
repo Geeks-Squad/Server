@@ -18,8 +18,10 @@ func CheckLogin(username, password string) bool {
 	if db == nil {
 		return false
 	}
-	row := db.QueryRow("select count(*) from Users where username = ? and password = ?", username, password)
-	if row != nil {
+	i := 0
+
+	db.QueryRow("select count(*) from Users where username = ? and password = ?", username, password).Scan(&i)
+	if i != 0 {
 		return true
 	}
 	return false
