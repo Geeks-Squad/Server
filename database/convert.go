@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func makeStructJSON(rows sql.Rows, w http.ResponseWriter) error {
+func makeStructJSON(rows *sql.Rows, w *http.ResponseWriter) error {
 
 	columns, err := rows.Columns()
 	if err != nil {
@@ -56,9 +56,9 @@ func makeStructJSON(rows sql.Rows, w http.ResponseWriter) error {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	(*w).Header().Set("Content-Type", "application/json")
 
-	err = json.NewEncoder(w).Encode(masterData)
+	err = json.NewEncoder(*w).Encode(masterData)
 
 	if err != nil {
 		return err

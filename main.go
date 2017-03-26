@@ -1,42 +1,28 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/vyasgiridhar/server/database"
+	"github.com/vyasgiridhar/server/handlers"
 )
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	authLogin := BasicAuth{http.HandlerFunc(Login)}
-	authCitizenID := BasicAuth{http.HandlerFunc(TodoIndex)}
 
-	router.HandleFunc("/Signup", SignUpHandler)
+	authLogin := database.BasicAuth{http.HandlerFunc(handlers.Login)}
+	authCitizenID := database.BasicAuth{http.HandlerFunc(handlers.GetCitizen)}
+	authAddress := database.BasicAuth{http.HandlerFunc(handlers.GetCitizen)}
+
+	router.HandleFunc("/Signup", handlers.SignUpHandler)
 
 	s := router.PathPrefix("/Citizen").Subrouter()
 
-	s.Handle("/", authLogin)
-	s.Handle("/Name/{Name}", authCitizenID)
+	s.Handle("/Login", authLogin)
+	s.Handle("/Address/{Address}", authAddress)
+	s.Handle("/{ID}", authCitizenID)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
-}
-
-func SignUpHandler(w http.ResponseWriter, r *http.Request) {
-	signup := SignupBody{}
-	decoder := json.NewDecoder(r.Body)
-
-	decoder.Decode(signup)
-	Signup(signup)
-}
-
-func Login(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Authorized")
-	w.Header().Add("Status-Code", string(http.StatusOK))
-}
-
-func TodoIndex(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Todo Index!")
 }
