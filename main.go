@@ -64,7 +64,7 @@ func main() {
 	queryRouter.HandleFunc("/submit", handlers.SubmitQuery).Methods("POST")
 	queryRouter.HandleFunc("/get", handlers.GetQueries).Methods("GET")
 
-	//Notif SubRouter
+	//Notif subRouter
 	notifRouter := router.PathPrefix("/notif").Subrouter()
 	notifRouter.HandleFunc("/send", handlers.AddNotif).Methods("POST")
 	notifRouter.HandleFunc("/get", handlers.GetNotifs).Methods("GET")
