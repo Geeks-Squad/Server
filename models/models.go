@@ -22,3 +22,8 @@ type SignupBody struct {
 	District string    `json:"district"`
 	Etype    int       `json:"etype"`
 }
+
+type Notif struct {
+	Content string `json:"content"`
+	Timestamp time.Time `json:"timestamp"`
+}

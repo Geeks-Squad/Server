@@ -9,7 +9,7 @@ import (
 )
 
 func createConn() *sql.DB {
-	db, err := sql.Open("mysql", "root:spd@/ddugky")
+	db, err := sql.Open("mysql", "root:babababa@/ddugky")
 	if err != nil {
 		return nil
 	}
@@ -44,40 +44,215 @@ func Signup(body models.SignupBody) bool {
 	return true
 }
 
-func GetCitizenDID(id int, w *http.ResponseWriter) bool {
+func GetCitizenID(id int64, w *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
-		return false
+		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
 	}
 	rows, err := db.Query("select * from Citizen where AdhaarID = ?", id)
 	if err != nil {
-		return false
+		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
 	}
 	makeStructJSON(rows, w)
-	return true
+	return
 }
 
-func GetCitizenDName(Name string, w *http.ResponseWriter) bool {
+func GetCitizenName(Name string, w *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
-		return false
+		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
 	}
 	rows, err := db.Query("select * from Citizen where Name = ?", Name)
 	if err != nil {
-		return false
+		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
 	}
 	makeStructJSON(rows, w)
-	return true
+	return
 }
 
-/*
-func GetCitizenD(Name string, w *http.ResponseWriter) bool {
+func GetTrainingForJob(i int64, writer *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
-		return false
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
 	}
-	rows, err := db.Query("select * from Citizen where Name = ?", Name)
-	makeStructJSON(rows, w)
-	return true
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
 }
-*/
+
+func GetTrainingCentre(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func UploadQuery(i int64, i2 string, i3 string, i4 string, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetQuery(writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetCentreTraining(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetJobsTraining(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetIndustryJobs(i string, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+
+func GetCitizenDSkill(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetCitizenTrainingSkill(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetTraining(i int64, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetIndustry(name string, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func AddNotif(notif models.Notif, writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}
+
+func GetNotifs(writer *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	makeStructJSON(rows, writer)
+}

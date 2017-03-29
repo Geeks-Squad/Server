@@ -7,22 +7,71 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/vyasgiridhar/server/database"
 	"github.com/vyasgiridhar/server/handlers"
+	handler "github.com/gorilla/handlers"
+	"os"
+	"github.com/pkg/profile"
+	"time"
 )
 
 func main() {
+
+	defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
+
 	router := mux.NewRouter().StrictSlash(true)
 
-	authLogin := database.BasicAuth{http.HandlerFunc(handlers.Login)}
-	authCitizenID := database.BasicAuth{http.HandlerFunc(handlers.GetCitizen)}
-	authAddress := database.BasicAuth{http.HandlerFunc(handlers.GetCitizen)}
+	authCitizenID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizen)}
+	authCitizenName := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizenName)}
+	authCitizenSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
+	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizenRegistration)}
 
 	router.HandleFunc("/Signup", handlers.SignUpHandler)
 
-	s := router.PathPrefix("/Citizen").Subrouter()
+	//Citizen SubRouter
+	citizenRouter := router.PathPrefix("/citizen").Subrouter()
+	citizenRouter.Handle("/id/{id}", authCitizenID).Methods("GET")
+	citizenRouter.Handle("/name/{name}",authCitizenName).Methods("GET")
 
-	s.Handle("/Login", authLogin)
-	s.Handle("/Address/{Address}", authAddress)
-	s.Handle("/{ID}", authCitizenID)
+	//Skill SubRouter
+	citizenSkill := router.PathPrefix("/Skill").Subrouter()
+	citizenSkill.Handle("/cid/{cid}", authCitizenSkill).Methods("GET")
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	//Registration SubRouter
+	registrationRouter := router.PathPrefix("/registration").Subrouter()
+	registrationRouter.HandleFunc("/training/{training}", handlers.GetTrainingCandidates).Methods("GET")
+	registrationRouter.Handle("/candidate/{id}", authRegistration).Methods("GET")
+
+	//Training SubRouter
+	trainingRouter := router.PathPrefix("/training").Subrouter()
+	trainingRouter.HandleFunc("/id/{id}", handlers.GetTraining).Methods("GET")
+	trainingRouter.HandleFunc("/centre/{id}", handlers.GetCentreTraining).Methods("GET")
+	trainingRouter.HandleFunc("/jobs/{trainingid}", handlers.GetJobsTraining).Methods("GET")
+
+	//Jobs SubRouter
+	jobRouter := router.PathPrefix("/jobs").Subrouter()
+	jobRouter.HandleFunc("training/{jobid}", handlers.GetTrainingForJob).Methods("GET")
+
+	//Industry SubRouter
+	industryRouter := router.PathPrefix("/industry").Subrouter()
+	industryRouter.HandleFunc("/name/{name}", handlers.GetIndustry).Methods("GET")
+	industryRouter.HandleFunc("/jobs/{industry}", handlers.GetIndustryJobs).Methods("GET")
+
+	//Training Centre SubRouter
+	tcentreRouter := router.PathPrefix("/tcentre").Subrouter()
+	tcentreRouter.HandleFunc("/id/{id}", handlers.GetTCentres).Methods("GET")
+
+	//Query SubRouter
+	queryRouter := router.PathPrefix("/query").Subrouter()
+	queryRouter.HandleFunc("/submit", handlers.SubmitQuery).Methods("POST")
+	queryRouter.HandleFunc("/get", handlers.GetQueries).Methods("GET")
+
+	//Notif SubRouter
+	notifRouter := router.PathPrefix("/notif").Subrouter()
+	notifRouter.HandleFunc("/send", handlers.AddNotif).Methods("POST")
+	notifRouter.HandleFunc("/get", handlers.GetNotifs).Methods("GET")
+
+
+	log.Fatal(http.ListenAndServe(":8080",
+		handler.LoggingHandler(os.Stdout,handler.CompressHandler(router))))
+	time.Sleep(10)
+	os.Exit(0)
 }
