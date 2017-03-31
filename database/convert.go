@@ -3,65 +3,97 @@ package database
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func makeStructJSON(rows *sql.Rows, w *http.ResponseWriter) error {
 
+	defer rows.Close()
+
 	columns, err := rows.Columns()
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	count := len(columns)
+	tableData := make([]map[string]interface{}, 0)
 	values := make([]interface{}, count)
-	scanArgs := make([]interface{}, count)
-	for i := range values {
-		scanArgs[i] = &values[i]
-	}
-
-	masterData := make(map[string][]interface{})
+	valuePtrs := make([]interface{}, count)
 
 	for rows.Next() {
-		err := rows.Scan(scanArgs...)
-		if err != nil {
-			return err
+		for i := 0; i < count; i++ {
+			valuePtrs[i] = &values[i]
 		}
-		for i, v := range values {
-
-			x := v.([]byte)
-
-			//NOTE: FROM THE GO BLOG: JSON and GO - 25 Jan 2011:
-			// The json package uses map[string]interface{} and []interface{} values to store arbitrary JSON objects and arrays; it will happily unmarshal any valid JSON blob into a plain interface{} value. The default concrete Go types are:
-			//
-			// bool for JSON booleans,
-			// float64 for JSON numbers,
-			// string for JSON strings, and
-			// nil for JSON null.
-
-			if nx, ok := strconv.ParseFloat(string(x), 64); ok == nil {
-				masterData[columns[i]] = append(masterData[columns[i]], nx)
-			} else if b, ok := strconv.ParseBool(string(x)); ok == nil {
-				masterData[columns[i]] = append(masterData[columns[i]], b)
-			} else if "string" == fmt.Sprintf("%T", string(x)) {
-				masterData[columns[i]] = append(masterData[columns[i]], string(x))
+		rows.Scan(valuePtrs...)
+		entry := make(map[string]interface{})
+		for i, col := range columns {
+			var v interface{}
+			val := values[i]
+			b, ok := val.([]byte)
+			if ok {
+				v = string(b)
 			} else {
-				fmt.Printf("Failed on if for type %T of %v\n", x, x)
+				v = val
 			}
-
+			entry[col] = v
 		}
+		tableData = append(tableData, entry)
+	}
+	jsonData, err := json.Marshal(tableData)
+	if err != nil {
+		return "", err
 	}
 
 	(*w).Header().Set("Content-Type", "application/json")
 
-	err = json.NewEncoder(*w).Encode(masterData)
+	_, err = (*w).Write(jsonData)
 
 	if err != nil {
 		return err
 	}
 	return err
 }
+
+/*
+func getJSON(sqlString string) (string, error) {
+  rows, err := db.Query(sqlString)
+  if err != nil {
+      return "", err
+  }
+  defer rows.Close()
+  columns, err := rows.Columns()
+  if err != nil {
+      return "", err
+  }
+  count := len(columns)
+  tableData := make([]map[string]interface{}, 0)
+  values := make([]interface{}, count)
+  valuePtrs := make([]interface{}, count)
+  for rows.Next() {
+      for i := 0; i < count; i++ {
+          valuePtrs[i] = &values[i]
+      }
+      rows.Scan(valuePtrs...)
+      entry := make(map[string]interface{})
+      for i, col := range columns {
+          var v interface{}
+          val := values[i]
+          b, ok := val.([]byte)
+          if ok {
+              v = string(b)
+          } else {
+              v = val
+          }
+          entry[col] = v
+      }
+      tableData = append(tableData, entry)
+  }
+  jsonData, err := json.Marshal(tableData)
+  if err != nil {
+      return "", err
+  }
+  fmt.Println(string(jsonData))
+  return string(jsonData), nil
+}*/
