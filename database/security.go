@@ -13,9 +13,6 @@ type BasicAuth struct {
 
 func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	b.Next.ServeHTTP(w, r)
-	return
-
 	authorizationArray := r.Header["Authorization"]
 
 	if len(authorizationArray) > 0 {
@@ -40,7 +37,7 @@ func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if userpass[0] == "foo" && userpass[1] == "bar" {
-
+			b.Next.ServeHTTP(w,r)
 		} else {
 			unauthorized(w)
 		}

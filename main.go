@@ -15,8 +15,6 @@ import (
 
 func main() {
 
-	fmt.Println("YO")
-
 	router := mux.NewRouter().StrictSlash(true)
 
 	authCandidateID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidate)}
@@ -68,7 +66,8 @@ func main() {
 	notifRouter := router.PathPrefix("/notif").Subrouter()
 	notifRouter.HandleFunc("/send", handlers.AddNotif).Methods("POST")
 	notifRouter.HandleFunc("/get", handlers.GetNotifs).Methods("GET")
-	notifRouter.HandleFunc("/sig/{lastPull", handlers.GetNotifsSig)
+	notifRouter.HandleFunc("/sig/{lastPull", handlers.GetNotifsSig).Methods("GET")
+
 	log.Fatal(http.ListenAndServe(":8080",
 		handler.LoggingHandler(os.Stdout, handler.CompressHandler(router))))
 }
