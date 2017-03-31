@@ -65,7 +65,7 @@ func GetCandidate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idS := vars["id"]
 
-	id, err := strconv.ParseInt(idS, 32, 8)
+	id, err := strconv.ParseInt(idS, 64, 8)
 	fmt.Println(id)
 	if err != nil {
 		fmt.Fprint(w, "Invalid Request")
