@@ -50,6 +50,6 @@ func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func unauthorized(w http.ResponseWriter) {
-	w.Header().Set("WWW-Authenticate", "Basic realm=\"user\"")
+	w.Header().Set("Authorization", "No")
 	http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 }

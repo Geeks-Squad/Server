@@ -172,7 +172,6 @@ func GetIndustryJobs(i string, writer *http.ResponseWriter) {
 	makeStructJSON(rows, writer)
 }
 
-
 func GetCitizenDSkill(i int64, writer *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
@@ -255,4 +254,22 @@ func GetNotifs(writer *http.ResponseWriter) {
 		return
 	}
 	makeStructJSON(rows, writer)
+}
+
+func CheckNotif() bool {
+	db := createConn()
+	if db == nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return false
+	}
+	rows, err := db.Query("")
+	if err != nil {
+		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
+		return false
+	}
+	if rows.Scan(&i) > 0 {
+		return true
+	}
+
+	return false
 }
