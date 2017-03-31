@@ -14,7 +14,7 @@ func makeStructJSON(rows *sql.Rows, w *http.ResponseWriter) error {
 
 	columns, err := rows.Columns()
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	count := len(columns)
@@ -43,7 +43,7 @@ func makeStructJSON(rows *sql.Rows, w *http.ResponseWriter) error {
 	}
 	jsonData, err := json.Marshal(tableData)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	(*w).Header().Set("Content-Type", "application/json")
@@ -53,7 +53,7 @@ func makeStructJSON(rows *sql.Rows, w *http.ResponseWriter) error {
 	if err != nil {
 		return err
 	}
-	return err
+	return nil
 }
 
 /*
