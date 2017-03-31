@@ -24,7 +24,8 @@ func main() {
 	router.HandleFunc("/Signup", handlers.SignUpHandler)
 	router.HandleFunc("/Login", handlers.LoginHandler)
 	//Candidate SubRouter
-	citizenRouter := router.PathPrefix("/citizen").Subrouter()
+
+	citizenRouter := router.PathPrefix("/candidate").Subrouter()
 	citizenRouter.Handle("/id/{id}", authCandidateID).Methods("GET")
 	citizenRouter.Handle("/name/{name}", authCandidateName).Methods("GET")
 
