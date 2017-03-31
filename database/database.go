@@ -51,7 +51,7 @@ func GetCandidateID(id int64, w *http.ResponseWriter) {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
 	}
-	rows, err := db.Query("select * from Candidate where AdhaarID = ?", id)
+	rows, err := db.Query("select * from Candidate where ID = ?", id)
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return

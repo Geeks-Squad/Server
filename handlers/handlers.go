@@ -66,13 +66,13 @@ func GetCandidate(w http.ResponseWriter, r *http.Request) {
 	idS := vars["id"]
 
 	id, err := strconv.ParseInt(idS, 32, 8)
+	fmt.Println(id)
 	if err != nil {
 		fmt.Fprint(w, "Invalid Request")
 		w.Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
 	}
 	database.GetCandidateID(id, &w)
-
 }
 func GetCandidateName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

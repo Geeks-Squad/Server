@@ -14,39 +14,39 @@ type BasicAuth struct {
 func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if r.Header.Get("Skip") == "yes" {
-		b.Next.ServeHTTP(w,r)
-		return
-	}
-	authorizationArray := r.Header["Authorization"]
+		b.Next.ServeHTTP(w, r)
+	} else {
+		authorizationArray := r.Header["Authorization"]
 
-	if len(authorizationArray) > 0 {
-		authorization := strings.TrimSpace(authorizationArray[0])
-		credentials := strings.Split(authorization, " ")
+		if len(authorizationArray) > 0 {
+			authorization := strings.TrimSpace(authorizationArray[0])
+			credentials := strings.Split(authorization, " ")
 
-		if len(credentials) != 2 || credentials[0] != "Basic" {
-			unauthorized(w)
-			return
-		}
+			if len(credentials) != 2 || credentials[0] != "Basic" {
+				unauthorized(w)
+				return
+			}
 
-		authstr, err := base64.StdEncoding.DecodeString(credentials[1])
-		if err != nil {
-			unauthorized(w)
-			return
-		}
+			authstr, err := base64.StdEncoding.DecodeString(credentials[1])
+			if err != nil {
+				unauthorized(w)
+				return
+			}
 
-		userpass := strings.Split(string(authstr), ":")
-		if len(userpass) != 2 {
-			unauthorized(w)
-			return
-		}
+			userpass := strings.Split(string(authstr), ":")
+			if len(userpass) != 2 {
+				unauthorized(w)
+				return
+			}
 
-		if userpass[0] == "foo" && userpass[1] == "bar" {
-			b.Next.ServeHTTP(w,r)
+			if userpass[0] == "foo" && userpass[1] == "bar" {
+				b.Next.ServeHTTP(w, r)
+			} else {
+				unauthorized(w)
+			}
 		} else {
 			unauthorized(w)
 		}
-	} else {
-		unauthorized(w)
 	}
 }
 
