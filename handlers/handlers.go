@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/vyasgiridhar/server/database"
 	"github.com/vyasgiridhar/server/models"
-	"strings"
 )
 
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,7 @@ func GetCitizenName(w http.ResponseWriter, r *http.Request) {
 
 func GetSkill(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
+	fmt.Println(vars)
 	id, err := strconv.ParseInt(vars["cid"], 32, 8)
 	if err != nil {
 		fmt.Fprint(w, "Invalid Request")
@@ -170,7 +170,7 @@ func SubmitQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	database.UploadQuery(id,query,tag,timestamp,&w)
+	database.UploadQuery(id, query, tag, timestamp, &w)
 }
 
 func GetQueries(w http.ResponseWriter, r *http.Request) {
@@ -179,12 +179,28 @@ func GetQueries(w http.ResponseWriter, r *http.Request) {
 
 func AddNotif(w http.ResponseWriter, r *http.Request) {
 	notif := models.Notif{}
-	decoder := json.Decoder(r.Body)
+	//decoder := json.Decoder(r.Body)
 
-	decoder.Decode(&notif)
-	database.AddNotif(notif,&w)
+	//decoder.Decode(&notif)
+	database.AddNotif(notif, &w)
 }
 
 func GetNotifs(w http.ResponseWriter, r *http.Request) {
 	database.GetNotifs(&w)
+}
+
+func GetNotifsSig(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	date, err := time.Parse("Fri Mar 31 20:03:16 GMT 2017", vars["lastPull"])
+	if err != nil {
+		fmt.Fprint(w, "Invalid Request")
+		w.Header().Set("Status-Code", string(http.StatusBadRequest))
+		return
+	}
+	if database.CheckNotif(date) {
+		fmt.Fprint(w, "1")
+	} else {
+		fmt.Fprint(w, "0")
+	}
 }

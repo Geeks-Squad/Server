@@ -1,21 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"os"
+
+	handler "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/vyasgiridhar/server/database"
 	"github.com/vyasgiridhar/server/handlers"
-	handler "github.com/gorilla/handlers"
-	"os"
-	"github.com/pkg/profile"
-	"time"
 )
 
 func main() {
 
-	defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
+	fmt.Println("YO")
 
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -29,7 +29,7 @@ func main() {
 	//Citizen SubRouter
 	citizenRouter := router.PathPrefix("/citizen").Subrouter()
 	citizenRouter.Handle("/id/{id}", authCitizenID).Methods("GET")
-	citizenRouter.Handle("/name/{name}",authCitizenName).Methods("GET")
+	citizenRouter.Handle("/name/{name}", authCitizenName).Methods("GET")
 
 	//Skill SubRouter
 	citizenSkill := router.PathPrefix("/Skill").Subrouter()
@@ -68,10 +68,7 @@ func main() {
 	notifRouter := router.PathPrefix("/notif").Subrouter()
 	notifRouter.HandleFunc("/send", handlers.AddNotif).Methods("POST")
 	notifRouter.HandleFunc("/get", handlers.GetNotifs).Methods("GET")
-
-
+	notifRouter.HandleFunc("/sig/{lastPull", handlers.GetNotifsSig)
 	log.Fatal(http.ListenAndServe(":8080",
-		handler.LoggingHandler(os.Stdout,handler.CompressHandler(router))))
-	time.Sleep(10)
-	os.Exit(0)
+		handler.LoggingHandler(os.Stdout, handler.CompressHandler(router))))
 }

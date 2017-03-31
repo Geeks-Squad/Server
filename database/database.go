@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/vyasgiridhar/server/models"
 )
@@ -256,18 +257,20 @@ func GetNotifs(writer *http.ResponseWriter) {
 	makeStructJSON(rows, writer)
 }
 
-func CheckNotif() bool {
+func CheckNotif(date time.Time) bool {
+	i := 0
 	db := createConn()
 	if db == nil {
-		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return false
 	}
 	rows, err := db.Query("")
 	if err != nil {
-		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return false
 	}
-	if rows.Scan(&i) > 0 {
+	if rows.Scan(&i) != nil {
+		return false
+	}
+	if i > 0 {
 		return true
 	}
 
