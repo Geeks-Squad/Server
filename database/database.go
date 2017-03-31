@@ -10,7 +10,7 @@ import (
 )
 
 func createConn() *sql.DB {
-	db, err := sql.Open("mysql", "root:babababa@/ddugky")
+	db, err := sql.Open("mysql", "smh2017:smh2017bro@/smh")
 	if err != nil {
 		return nil
 	}
