@@ -19,21 +19,21 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 
-	authCitizenID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizen)}
-	authCitizenName := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizenName)}
-	authCitizenSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
-	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCitizenRegistration)}
+	authCandidateID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidate)}
+	authCandidateName := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateName)}
+	authCandidateSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
+	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateRegistration)}
 
 	router.HandleFunc("/Signup", handlers.SignUpHandler)
-
-	//Citizen SubRouter
+	router.HandleFunc("/Login", handlers.LoginHandler)
+	//Candidate SubRouter
 	citizenRouter := router.PathPrefix("/citizen").Subrouter()
-	citizenRouter.Handle("/id/{id}", authCitizenID).Methods("GET")
-	citizenRouter.Handle("/name/{name}", authCitizenName).Methods("GET")
+	citizenRouter.Handle("/id/{id}", authCandidateID).Methods("GET")
+	citizenRouter.Handle("/name/{name}", authCandidateName).Methods("GET")
 
 	//Skill SubRouter
 	citizenSkill := router.PathPrefix("/Skill").Subrouter()
-	citizenSkill.Handle("/cid/{cid}", authCitizenSkill).Methods("GET")
+	citizenSkill.Handle("/cid/{cid}", authCandidateSkill).Methods("GET")
 
 	//Registration SubRouter
 	registrationRouter := router.PathPrefix("/registration").Subrouter()

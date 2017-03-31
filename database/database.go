@@ -45,13 +45,13 @@ func Signup(body models.SignupBody) bool {
 	return true
 }
 
-func GetCitizenID(id int64, w *http.ResponseWriter) {
+func GetCandidateID(id int64, w *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
 	}
-	rows, err := db.Query("select * from Citizen where AdhaarID = ?", id)
+	rows, err := db.Query("select * from Candidate where AdhaarID = ?", id)
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
@@ -60,13 +60,13 @@ func GetCitizenID(id int64, w *http.ResponseWriter) {
 	return
 }
 
-func GetCitizenName(Name string, w *http.ResponseWriter) {
+func GetCandidateName(Name string, w *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
 	}
-	rows, err := db.Query("select * from Citizen where Name = ?", Name)
+	rows, err := db.Query("select * from Candidate where Name = ?", Name)
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(http.StatusBadRequest))
 		return
@@ -173,7 +173,7 @@ func GetIndustryJobs(i string, writer *http.ResponseWriter) {
 	makeStructJSON(rows, writer)
 }
 
-func GetCitizenDSkill(i int64, writer *http.ResponseWriter) {
+func GetCandidateDSkill(i int64, writer *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
 		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
@@ -187,7 +187,7 @@ func GetCitizenDSkill(i int64, writer *http.ResponseWriter) {
 	makeStructJSON(rows, writer)
 }
 
-func GetCitizenTrainingSkill(i int64, writer *http.ResponseWriter) {
+func GetCandidateTrainingSkill(i int64, writer *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
 		(*writer).Header().Set("Status-Code", string(http.StatusBadRequest))
