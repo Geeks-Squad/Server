@@ -69,5 +69,5 @@ func main() {
 	notifRouter.HandleFunc("/sig/{lastPull", handlers.GetNotifsSig).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080",
-		handler.LoggingHandler(os.Stdout, handler.CompressHandler(router))))
+		handler.LoggingHandler(os.Stdout, router)))
 }
