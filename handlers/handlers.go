@@ -132,6 +132,7 @@ func UploadForm(writer http.ResponseWriter, request *http.Request) {
 	form := models.Form{}
 	decoder := json.NewDecoder(request.Body)
 	err := decoder.Decode(&form)
+	fmt.Println(form)
 	if err != nil {
 		panic(err)
 	}
