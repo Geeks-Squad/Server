@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -17,26 +16,16 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	authorizationArray := r.Header["Authorization"]
 
-	if len(authorizationArray) > 0 {
-		authorization := strings.TrimSpace(authorizationArray[0])
-		credentials := strings.Split(authorization, " ")
+	authorization := strings.TrimSpace(authorizationArray[0])
 
-		if len(credentials) != 2 || credentials[0] != "Basic" {
-			unauthorized(w)
-			return
-		}
-
-		userpass := strings.Split(string(credentials[1]), ":")
-		if len(userpass) != 2 {
-			unauthorized(w)
-			return
-		}
-
-		if database.CheckLogin(userpass[0], userpass[1]) {
-			fmt.Fprint(w, "1")
-		} else {
-			unauthorized(w)
-		}
+	userpass := strings.Split(authorization, ":")
+	if len(userpass) != 2 {
+		fmt.Println("Y")
+		unauthorized(w)
+		return
+	}
+	if database.CheckLogin(userpass[0], userpass[1]) {
+		fmt.Fprint(w, "1")
 	} else {
 		unauthorized(w)
 	}
@@ -95,7 +84,7 @@ func GetSkill(w http.ResponseWriter, r *http.Request) {
 
 func GetCandidateRegistration(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	
+
 	id, err := strconv.ParseInt(vars["id"], 32, 8)
 	if err != nil {
 		fmt.Fprint(w, "Invalid Request")
@@ -149,6 +138,11 @@ func GetTestFromCentre(writer http.ResponseWriter, request *http.Request) {
 	idS := vars["tcname"]
 
 	database.GetTestFromCentre(idS, &writer)
+}
+
+func GetAllTCentres(w http.ResponseWriter, r *http.Request) {
+
+	database.GetAllTrainingCentre(&w)
 }
 
 func GetTCentres(w http.ResponseWriter, r *http.Request) {

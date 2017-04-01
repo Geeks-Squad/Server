@@ -1,9 +1,9 @@
 package database
 
 import (
-	"encoding/base64"
 	"net/http"
 	"strings"
+	"fmt"
 )
 
 // BasicAuth Middleware with next handler in chain
@@ -17,7 +17,7 @@ func (b BasicAuth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		b.Next.ServeHTTP(w, r)
 	} else {
 		authorizationArray := r.Header["Authorization"]
-
+		fmt.Println(authorizationArray)
 		if len(authorizationArray) > 0 {
 			authorization := strings.TrimSpace(authorizationArray[0])
 			credentials := strings.Split(authorization, " ")

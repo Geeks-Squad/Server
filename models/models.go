@@ -1,15 +1,7 @@
 package models
 
-import "time"
-
-type LoginBody struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type Notif struct {
-	Content   string    `json:"content"`
-	Timestamp time.Time `json:"timestamp"`
+	Content string `json:"content"`
 }
 
 type Form struct {
@@ -18,6 +10,11 @@ type Form struct {
 }
 
 type FormData struct {
-	Question int `json:"question"`
+	Question int    `json:"question"`
 	Answer   string `json:"answer"`
+}
+
+type UploadQuestion struct {
+	tcid int   `json:"tcid"`
+	qid  []int `json:"qid"`
 }

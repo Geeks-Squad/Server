@@ -18,8 +18,8 @@ func main() {
 
 	authCandidateID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidate)}
 	authCandidateName := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateName)}
-//	authCandidateSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
-//	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateRegistration)}
+	//	authCandidateSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
+	//	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateRegistration)}
 
 	//	router.HandwleFunc("/Signup", handlers.SignUpHandler)
 	router.HandleFunc("/Login", handlers.LoginHandler)
@@ -30,10 +30,10 @@ func main() {
 	citizenRouter.Handle("/name/{name}", authCandidateName).Methods("GET")
 
 	//Registration SubRouter
-//	registrationRouter := router.PathPrefix("/registration").Subrouter()
-//	registrationRouter.HandleFunc("/status/{id}", handlers.getStatus).Methods("GET")
-//	registrationRouter.HandleFunc("/training/{training}", handlers.GetTrainingCandidates).Methods("GET")
-//	registrationRouter.Handle("/candidate/{id}", authRegistration).Methods("GET")
+	//	registrationRouter := router.PathPrefix("/registration").Subrouter()
+	//	registrationRouter.HandleFunc("/status/{id}", handlers.getStatus).Methods("GET")
+	//	registrationRouter.HandleFunc("/training/{training}", handlers.GetTrainingCandidates).Methods("GET")
+	//	registrationRouter.Handle("/candidate/{id}", authRegistration).Methods("GET")
 
 	//Training SubRouter
 	trainingRouter := router.PathPrefix("/training").Subrouter()
@@ -51,6 +51,7 @@ func main() {
 
 	//Training Centre SubRouter
 	tcentreRouter := router.PathPrefix("/tcentre").Subrouter()
+	tcentreRouter.HandleFunc("/all", handlers.GetAllTCentres).Methods("GET")
 	tcentreRouter.HandleFunc("/id/{id}", handlers.GetTCentres).Methods("GET")
 	tcentreRouter.HandleFunc("/candidates/{id}", handlers.GetTrainingCandidates).Methods("GET")
 
@@ -70,13 +71,14 @@ func main() {
 	formRouter.HandleFunc("/upload", handlers.UploadForm).Methods("POST")
 	formRouter.HandleFunc("/get/feedback/{tcname}", handlers.GetFeedbackFromCentre).Methods("GET")
 	formRouter.HandleFunc("/get/test/{tcname}", handlers.GetTestFromCentre).Methods("GET")
+	//	formRouter.HandleFunc("/update", handlers.UpdateQuestions).Methods("GET")
 
 	//Statistics SubRouter
 	statRouter := router.PathPrefix("/stat").Subrouter()
-	statRouter.HandleFunc("/state",handlers.GetIndiaStats).Methods("GET")
+	statRouter.HandleFunc("/state", handlers.GetIndiaStats).Methods("GET")
 	statRouter.HandleFunc("/inprogress", handlers.GetInProgress).Methods("GET")
 	statRouter.HandleFunc("/candidprogress", handlers.GetCanInProgress).Methods("GET")
-	statRouter.HandleFunc("/total",handlers.GetTotalStats).Methods("GET")
+	statRouter.HandleFunc("/total", handlers.GetTotalStats).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080",
 		handler.LoggingHandler(os.Stdout, router)))
