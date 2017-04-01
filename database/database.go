@@ -320,8 +320,9 @@ func GetAllTrainingCentre(writer *http.ResponseWriter) {
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}
-	rows, err := db.Query("SELECT id,name from trainingcentre")
+	rows, err := db.Query("SELECT id,name from trainingcenter")
 	if err != nil {
+		fmt.Println(err)
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}
