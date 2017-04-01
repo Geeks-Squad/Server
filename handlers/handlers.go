@@ -132,10 +132,14 @@ func GetTraining(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadForm(writer http.ResponseWriter, request *http.Request) {
-	form := models.Form{}
-	decoder := json.Decoder(request.Body)
+	defer request.Body.Close()
 
-	decoder.Decode(&form)
+	form := models.Form{}
+	decoder := json.NewDecoder(request.Body)
+	err := decoder.Decode(&form)
+	if err != nil {
+		panic(err)
+	}
 	database.UploadForm(form, &writer)
 }
 
@@ -206,7 +210,7 @@ func GetQueries(w http.ResponseWriter, r *http.Request) {
 
 func AddNotif(w http.ResponseWriter, r *http.Request) {
 	notif := models.Notif{}
-	decoder := json.Decoder(r.Body)
+	decoder := json.NewDecoder(r.Body)
 
 	decoder.Decode(&notif)
 	database.AddNotif(notif, &w)
