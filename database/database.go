@@ -186,6 +186,20 @@ func GetCandidateStatus(i int64, writer *http.ResponseWriter) {
 	makeStructJSON(rows, writer)
 }
 
+func UploadQuestions(q models.UploadQuestion, w *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*w).Header().Set("Status-Code", string(400))
+		return
+	}
+	_, err := db.Exec("INSERT INTO question(question,tcid,type) values(?,?,?)", q.Data.Question, q.Data.Answer, q.Tcid)
+	if err != nil {
+		(*w).Header().Set("Status-Code", string(400))
+		fmt.Println(err)
+		return
+	}
+}
+
 func UploadForm(form models.Form, w *http.ResponseWriter) {
 	db := createConn()
 	if db == nil {
@@ -266,6 +280,7 @@ func GetCandidateTraining(name string, writer *http.ResponseWriter) {
 	}
 	rows, err := db.Query("select aadharno from candidate where tid in (select tid from training where name like ?)", name)
 	if err != nil {
+		fmt.Println(err)
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}

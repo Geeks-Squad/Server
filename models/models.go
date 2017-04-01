@@ -15,6 +15,10 @@ type FormData struct {
 }
 
 type UploadQuestion struct {
-	tcid int   `json:"tcid"`
-	qid  []int `json:"qid"`
+	Tcid int      `json:"tcid"`
+	Data FormData `json:"qa"`
+}
+
+type Qlist struct {
+	list []int `json:"list"`
 }

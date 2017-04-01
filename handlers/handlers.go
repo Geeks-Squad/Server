@@ -114,6 +114,18 @@ func GetTraining(w http.ResponseWriter, r *http.Request) {
 	database.GetTraining(id, &w)
 }
 
+func UpdateQuestions(writer http.ResponseWriter, request *http.Request) {
+	defer request.Body.Close()
+
+	question := models.UploadQuestion{}
+	decoder := json.NewDecoder(request.Body)
+	err := decoder.Decode(&question)
+	if err != nil {
+		panic(err)
+	}
+	database.UploadQuestions(question, &writer)
+}
+
 func UploadForm(writer http.ResponseWriter, request *http.Request) {
 	defer request.Body.Close()
 
