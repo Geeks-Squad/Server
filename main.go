@@ -23,8 +23,8 @@ func main() {
 
 	//	router.HandwleFunc("/Signup", handlers.SignUpHandler)
 	router.HandleFunc("/Login", handlers.LoginHandler)
-	//Candidate SubRouter
 
+	//Candidate SubRouter
 	citizenRouter := router.PathPrefix("/candidate").Subrouter()
 	citizenRouter.Handle("/adhaar/{id}", authCandidateID).Methods("GET")
 	citizenRouter.Handle("/name/{name}", authCandidateName).Methods("GET")
@@ -65,15 +65,18 @@ func main() {
 	notifRouter.HandleFunc("/get", handlers.GetNotifs).Methods("GET")
 	notifRouter.HandleFunc("/sig/{lastPull}", handlers.GetNotifsSig).Methods("GET")
 
+	//Form SubRouter
 	formRouter := router.PathPrefix("/form").Subrouter()
 	formRouter.HandleFunc("/upload", handlers.UploadForm).Methods("POST")
 	formRouter.HandleFunc("/get/feedback/{tcname}", handlers.GetFeedbackFromCentre).Methods("GET")
 	formRouter.HandleFunc("/get/test/{tcname}", handlers.GetTestFromCentre).Methods("GET")
 
+	//Statistics SubRouter
 	statRouter := router.PathPrefix("/stat").Subrouter()
 	statRouter.HandleFunc("/state",handlers.GetIndiaStats).Methods("GET")
 	statRouter.HandleFunc("/inprogress", handlers.GetInProgress).Methods("GET")
 	statRouter.HandleFunc("/candidprogress", handlers.GetCanInProgress).Methods("GET")
+	statRouter.HandleFunc("/total",handlers.GetTotalStats).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080",
 		handler.LoggingHandler(os.Stdout, router)))

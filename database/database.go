@@ -10,7 +10,7 @@ import (
 )
 
 func createConn() *sql.DB {
-	db, err := sql.Open("mysql", "smh2017:smh2017bro@/SMH")
+	db, err := sql.Open("mysql", "smh2017:smh2017bro@tcp(172.104.51.13:3306)/SMH")
 	if err != nil {
 		return nil
 	}
@@ -69,7 +69,7 @@ func GetIndiaStats(w *http.ResponseWriter) {
 		(*w).Header().Set("Status-Code", string(400))
 		return
 	}
-	rows, err := db.Query("select state,count(*) from candidate group by state")
+	rows, err := db.Query("select state,count(*) as scount from candidate group by state")
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(400))
 		return
@@ -84,9 +84,10 @@ func GetCanInProgress(writer *http.ResponseWriter) {
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}
-	rows, err := db.Query("select count(*) from candidate where status = \"under_training\"")
+	rows, err := db.Query("select count(*) as scount from candidate where status = \"under_training\"")
 	if err != nil {
 		(*writer).Header().Set("Status-Code", string(400))
+		fmt.Println(err)
 		return
 	}
 	makeStructJSON(rows, writer)
@@ -99,9 +100,26 @@ func GetInProgress(w *http.ResponseWriter) {
 		(*w).Header().Set("Status-Code", string(400))
 		return
 	}
-	rows, err := db.Query("select count(*) from training where status = \"ongoing\"")
+	rows, err := db.Query("select count(*) as scount from training where status = \"ongoing\"")
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(400))
+		fmt.Println(err)
+		return
+	}
+	makeStructJSON(rows, w)
+	return
+}
+
+func GetTotalStats(w *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*w).Header().Set("Status-Code", string(400))
+		return
+	}
+	rows, err := db.Query("select count(*) as scount from candidate")
+	if err != nil {
+		(*w).Header().Set("Status-Code", string(400))
+		fmt.Println(err)
 		return
 	}
 	makeStructJSON(rows, w)
@@ -207,7 +225,6 @@ func GetTestFromCentre(tname string, writer *http.ResponseWriter) {
 		return
 	}
 	makeStructJSON(rows, writer)
-
 }
 
 func GetCandidateDSkill(i int64, writer *http.ResponseWriter) {

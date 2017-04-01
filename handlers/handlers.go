@@ -26,13 +26,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		authstr, err := base64.StdEncoding.DecodeString(credentials[1])
-		if err != nil {
-			unauthorized(w)
-			return
-		}
-
-		userpass := strings.Split(string(authstr), ":")
+		userpass := strings.Split(string(credentials[1]), ":")
 		if len(userpass) != 2 {
 			unauthorized(w)
 			return
@@ -234,4 +228,8 @@ func GetNotifsSig(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprint(w, "0")
 	}
+}
+
+func GetTotalStats(writer http.ResponseWriter, request *http.Request) {
+	database.GetTotalStats(&writer)
 }
