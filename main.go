@@ -8,7 +8,6 @@ import (
 
 	handler "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/vyasgiridhar/server/database"
 	"github.com/vyasgiridhar/server/handlers"
 )
 
@@ -16,8 +15,6 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 
-	authCandidateID := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidate)}
-	authCandidateName := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateName)}
 	//	authCandidateSkill := database.BasicAuth{Next: http.HandlerFunc(handlers.GetSkill)}
 	//	authRegistration := database.BasicAuth{Next: http.HandlerFunc(handlers.GetCandidateRegistration)}
 
@@ -26,8 +23,8 @@ func main() {
 
 	//Candidate SubRouter
 	citizenRouter := router.PathPrefix("/candidate").Subrouter()
-	citizenRouter.Handle("/adhaar/{id}", authCandidateID).Methods("GET")
-	citizenRouter.Handle("/name/{name}", authCandidateName).Methods("GET")
+	citizenRouter.HandleFunc("/adhaar/{id}", handlers.GetCandidate).Methods("GET")
+	citizenRouter.HandleFunc("/name/{name}", handlers.GetCandidateName).Methods("GET")
 
 	//Registration SubRouter
 	//	registrationRouter := router.PathPrefix("/registration").Subrouter()
@@ -72,6 +69,7 @@ func main() {
 	formRouter.HandleFunc("/get/feedback/{tcname}", handlers.GetFeedbackFromCentre).Methods("GET")
 	formRouter.HandleFunc("/get/test/{tcname}", handlers.GetTestFromCentre).Methods("GET")
 	formRouter.HandleFunc("/update", handlers.UpdateQuestions).Methods("POST")
+	formRouter.HandleFunc("/sendform", handlers.MinSendForm).Methods("GET")
 
 	//Statistics SubRouter
 	statRouter := router.PathPrefix("/stat").Subrouter()

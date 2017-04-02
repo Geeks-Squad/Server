@@ -25,5 +25,6 @@ type UploadQuestion struct {
 }
 
 type Qlist struct {
-	list []int `json:"list"`
+	Tcid int   `json:"tcid"`
+	List []int `json:"list"`
 }

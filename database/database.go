@@ -150,7 +150,7 @@ func UploadQuery(id int64, query, tag, timestamp string, writer *http.ResponseWr
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}
-	_, err := db.Exec("INSERT INTO queries VALUE (?,?,?,?,?,?)", id, query, tag, timestamp, nil, nil)
+	_, err := db.Exec("INSERT INTO queries(query,tag,,) VALUE (?,?,?,?,?,?)", query, tag, timestamp, nil, nil)
 	if err != nil {
 		(*writer).Header().Set("Status-Code", string(400))
 		return
@@ -164,7 +164,7 @@ func GetQuery(tag string, writer *http.ResponseWriter) {
 		(*writer).Header().Set("Status-Code", string(400))
 		return
 	}
-	rows, err := db.Query("SELECT * FROM queries WHERE tag like ?", tag)
+	rows, err := db.Query("SELECT * FROM queries WHERE tag like ? and status = 0", tag)
 	if err != nil {
 		(*writer).Header().Set("Status-Code", string(400))
 		return
@@ -199,6 +199,22 @@ func UploadQuestions(q models.UploadQuestion, w *http.ResponseWriter) {
 		fmt.Println(err)
 		return
 	}
+}
+
+func MinSendForm(list models.Qlist, w *http.ResponseWriter) {
+	db := createConn()
+	if db == nil {
+		(*w).Header().Set("Status-Code", string(400))
+		return
+	}
+	for i := 0; i < len(list.List); i++ {
+		_, err := db.Exec("insert into query() and aadharno in (select aadharno from candidate where tid = ?)",list.Tcid )
+		if err != nil {
+			(*w).Header().Set("Status-Code", string(400))
+			return
+		}
+	}
+	(*w).Header().Set("Status-Code", string(200))
 }
 
 func UploadForm(form models.Form, w *http.ResponseWriter) {

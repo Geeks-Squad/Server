@@ -129,6 +129,20 @@ func UpdateQuestions(w http.ResponseWriter, request *http.Request) {
 	}
 	database.UploadQuestions(question, &w)
 }
+func MinSendForm(w http.ResponseWriter, request *http.Request) {
+
+	list := models.Qlist{}
+	decoder := json.NewDecoder(request.Body)
+	err := decoder.Decode(&list)
+	fmt.Println(list)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Fprint(w, "Invalid Request")
+		w.Header().Set("Status-Code", string(400))
+		return
+	}
+	database.MinSendForm(list, &w)
+}
 
 func UploadForm(w http.ResponseWriter, request *http.Request) {
 
@@ -179,19 +193,11 @@ func GetTCentres(w http.ResponseWriter, r *http.Request) {
 
 func SubmitQuery(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	tag := r.Form.Get("tag")
+/*	tag := r.Form.Get("tag")
 	query := r.Form.Get("query")
 	timestamp := r.Form.Get("timestamp")
-	idS := r.Form.Get("id")
-
-	id, err := strconv.ParseInt(idS, 32, 8)
-	if err != nil {
-		fmt.Fprint(w, "Invalid Request")
-		w.Header().Set("Status-Code", string(400))
-		return
-	}
-
-	database.UploadQuery(id, query, tag, timestamp, &w)
+*/
+//	database.UploadQuery(query, tag, timestamp, &w)
 }
 
 func GetIndiaStats(writer http.ResponseWriter, request *http.Request) {
