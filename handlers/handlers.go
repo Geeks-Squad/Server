@@ -127,7 +127,7 @@ func UpdateQuestions(w http.ResponseWriter, request *http.Request) {
 		w.Header().Set("Status-Code", string(400))
 		return
 	}
-	database.UploadQuestions(question, &writer)
+	database.UploadQuestions(question, &w)
 }
 
 func UploadForm(w http.ResponseWriter, request *http.Request) {
@@ -142,7 +142,7 @@ func UploadForm(w http.ResponseWriter, request *http.Request) {
 		w.Header().Set("Status-Code", string(400))
 		return
 	}
-	database.UploadForm(form, &writer)
+	database.UploadForm(form, &w)
 }
 
 func GetFeedbackFromCentre(writer http.ResponseWriter, request *http.Request) {
