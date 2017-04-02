@@ -71,7 +71,7 @@ func main() {
 	formRouter.HandleFunc("/upload", handlers.UploadForm).Methods("POST")
 	formRouter.HandleFunc("/get/feedback/{tcname}", handlers.GetFeedbackFromCentre).Methods("GET")
 	formRouter.HandleFunc("/get/test/{tcname}", handlers.GetTestFromCentre).Methods("GET")
-	formRouter.HandleFunc("/update", handlers.UpdateQuestions).Methods("GET")
+	formRouter.HandleFunc("/update", handlers.UpdateQuestions).Methods("POST")
 
 	//Statistics SubRouter
 	statRouter := router.PathPrefix("/stat").Subrouter()

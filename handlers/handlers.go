@@ -115,26 +115,32 @@ func GetTraining(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateQuestions(writer http.ResponseWriter, request *http.Request) {
-	defer request.Body.Close()
 
+	fmt.Println(request.Body)
 	question := models.UploadQuestion{}
 	decoder := json.NewDecoder(request.Body)
 	err := decoder.Decode(&question)
+	fmt.Println(question)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		fmt.Fprint(w, "Invalid Request")
+		w.Header().Set("Status-Code", string(400))
+		return
 	}
 	database.UploadQuestions(question, &writer)
 }
 
 func UploadForm(writer http.ResponseWriter, request *http.Request) {
-	defer request.Body.Close()
 
 	form := models.Form{}
 	decoder := json.NewDecoder(request.Body)
 	err := decoder.Decode(&form)
 	fmt.Println(form)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		fmt.Fprint(w, "Invalid Request")
+		w.Header().Set("Status-Code", string(400))
+		return
 	}
 	database.UploadForm(form, &writer)
 }

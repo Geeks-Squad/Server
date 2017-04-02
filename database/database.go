@@ -192,7 +192,8 @@ func UploadQuestions(q models.UploadQuestion, w *http.ResponseWriter) {
 		(*w).Header().Set("Status-Code", string(400))
 		return
 	}
-	_, err := db.Exec("INSERT INTO question(question,tcid,type) values(?,?,?)", q.Data.Question, q.Data.Answer, q.Tcid)
+	fmt.Println(q)
+	_, err := db.Exec("INSERT INTO question(question,tcid,type) values(?,?,?)", q.Data.Question, q.Tcid, q.Data.Answer)
 	if err != nil {
 		(*w).Header().Set("Status-Code", string(400))
 		fmt.Println(err)

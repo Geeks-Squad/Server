@@ -14,9 +14,14 @@ type FormData struct {
 	Answer   string `json:"answer"`
 }
 
+type Question struct {
+	Question string `json:"question"`
+	Answer   string `json:"answer"`
+}
+
 type UploadQuestion struct {
 	Tcid int      `json:"tcid"`
-	Data FormData `json:"qa"`
+	Data Question `json:"qa"`
 }
 
 type Qlist struct {
