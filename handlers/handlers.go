@@ -114,7 +114,7 @@ func GetTraining(w http.ResponseWriter, r *http.Request) {
 	database.GetTraining(id, &w)
 }
 
-func UpdateQuestions(writer http.ResponseWriter, request *http.Request) {
+func UpdateQuestions(w http.ResponseWriter, request *http.Request) {
 
 	fmt.Println(request.Body)
 	question := models.UploadQuestion{}
@@ -130,7 +130,7 @@ func UpdateQuestions(writer http.ResponseWriter, request *http.Request) {
 	database.UploadQuestions(question, &writer)
 }
 
-func UploadForm(writer http.ResponseWriter, request *http.Request) {
+func UploadForm(w http.ResponseWriter, request *http.Request) {
 
 	form := models.Form{}
 	decoder := json.NewDecoder(request.Body)
